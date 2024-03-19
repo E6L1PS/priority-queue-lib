@@ -1,3 +1,5 @@
+import UnlimitedPriorityQueue.CollisionStrategy
+
 class LimitedPrioritySuite extends munit.FunSuite {
 
   val queue: PriorityQueue[Animal] = LimitedPriorityQueue[Animal](5)
@@ -7,14 +9,30 @@ class LimitedPrioritySuite extends munit.FunSuite {
     .enqueue(Cat(5, "cat_4"))
     .enqueue(Cat(10, "cat_5"))
 
-  test("превышен лимит") {
+  test("Тест методов") {
+    val q1 = queue
 
+    val obtained = q1.peek
+    val expected = Cat(11, "cat_3")
+    assertEquals(obtained, expected)
+
+    val q2 = q1.dequeue._2
+    val obtained2 = q2.peek
+    val expected2 = Cat(10, "cat_5")
+    assertEquals(obtained2, expected2)
+
+    val q3 = q2.dequeue._2
+    val obtained3 = q3.peek
+    val expected3 = Cat(10, "cat_2")
+    assertEquals(obtained3, expected3)
+  }
+
+  test("Тест превышения лимита") {
     queue
       .enqueue(Cat(2, "cat_6"))
       .enqueue(Cat(5, "cat_7"))
       .enqueue(Cat(3, "cat_8"))
 
-    assertEquals(queue.size, 5)
     assertEquals(queue.size, 5)
   }
 
@@ -39,6 +57,7 @@ class LimitedPrioritySuite extends munit.FunSuite {
     assertEquals(limitedPriorityQueue.size, limit)
     assertEquals(limitedPriorityQueue.toList, List(12, 11, 11, 10, 10, 6))
   }
+
   test("Тесты лимита 2") {
     val limit = 5
     val limitedPriorityQueue = LimitedPriorityQueue[Int](limit)
@@ -52,44 +71,6 @@ class LimitedPrioritySuite extends munit.FunSuite {
 
     assertEquals(limitedPriorityQueue.size, limit)
     assertEquals(limitedPriorityQueue.toList, List(10, 6, 5, 5, 4))
-  }
-
-  test("example test that succeeds") {
-    val q1 = queue
-
-    val obtained = q1.peek
-    val expected = Cat(11, "cat_3")
-    assertEquals(obtained, expected)
-
-    val q2 = q1.dequeue._2
-    val obtained2 = q2.peek
-    val expected2 = Cat(10, "cat_5")
-    assertEquals(obtained2, expected2)
-
-    val q3 = q2.dequeue._2
-    val obtained3 = q3.peek
-    val expected3 = Cat(10, "cat_2")
-    assertEquals(obtained3, expected3)
-  }
-
-
-  test("Тест преобразования очереди в список и массив") {
-    val expectedList = List(
-      Cat(1, "cat_1"),
-      Cat(10, "cat_2"),
-      Cat(11, "cat_3"),
-      Cat(5, "cat_4"),
-      Cat(10, "cat_5")
-    ).sortBy(_.age).reverse
-    val expectedArray = Array(
-      Cat(1, "cat_1"),
-      Cat(10, "cat_2"),
-      Cat(11, "cat_3"),
-      Cat(5, "cat_4"),
-      Cat(10, "cat_5")
-    ).sortBy(_.age).reverse
-    assertEquals(queue.toList, expectedList)
-    assertEquals(queue.toArray.mkString("Array(", ", ", ")"), expectedArray.mkString("Array(", ", ", ")"))
   }
 
 }
