@@ -29,34 +29,16 @@ class UnlimitedPrioritySuite extends munit.FunSuite {
 
 
   test("Тест работы очереди с int") {
-    val unlimitedPriorityQueue = UnlimitedPriorityQueue[Int]()
+    val queue = UnlimitedPriorityQueue[Int]()
       .enqueue(10)
       .enqueue(11)
       .enqueue(12)
       .enqueue(11)
-    println(unlimitedPriorityQueue)
-  }
-
-  test("Тест 11") {
-    val catQueue: PriorityQueue[Animal] = UnlimitedPriorityQueue[Animal]()
-      .enqueue(Cat(1, "cat_1"))
-      .enqueue(Cat(2, "cat_2"))
-      .enqueue(Cat(3, "cat_3"))
-      .enqueue(Cat(4, "cat_4"))
-      .enqueue(Cat(5, "cat_5"))
-      .enqueue(Cat(6, "cat_6"))
-      .enqueue(Cat(7, "cat_7"))
-      .enqueue(Cat(8, "cat_8"))
-      .enqueue(Cat(9, "cat_9"))
-      .enqueue(Cat(10, "cat_10"))
-
-
-    println(catQueue)
+    println(queue)
   }
 
   test("Тест работы очереди с коллизиями в стратегии LIFO") {
-
-    val catQueue1: PriorityQueue[Animal] = UnlimitedPriorityQueue[Animal]()
+    val queue = UnlimitedPriorityQueue[Animal]()
       .enqueue(Cat(1, "cat_1"))
       .enqueue(Cat(1, "cat_2"))
       .enqueue(Cat(1, "cat_3"))
@@ -64,10 +46,6 @@ class UnlimitedPrioritySuite extends munit.FunSuite {
       .enqueue(Cat(10, "cat_5"))
       .enqueue(Cat(10, "cat_6"))
       .enqueue(Cat(10, "cat_7"))
-      .enqueue(Cat(10, "cat_8"))
-      .enqueue(Cat(10, "cat_9"))
-      .enqueue(Cat(10, "cat_10"))
-
 
       .enqueue(Dog(1, "cat_1"))
       .enqueue(Dog(1, "cat_2"))
@@ -76,16 +54,19 @@ class UnlimitedPrioritySuite extends munit.FunSuite {
       .enqueue(Dog(10, "cat_5"))
       .enqueue(Dog(10, "cat_6"))
       .enqueue(Dog(10, "cat_7"))
-      .enqueue(Dog(10, "cat_8"))
-      .enqueue(Dog(10, "cat_9"))
-      .enqueue(Dog(10, "cat_10"))
 
+    val expectedList = List(
+      Cat(10, "cat_5"), Cat(10, "cat_6"), Cat(10, "cat_7"), Dog(10, "cat_5"),
+      Dog(10, "cat_6"), Dog(10, "cat_7"), Cat(1, "cat_1"), Cat(1, "cat_2"),
+      Cat(1, "cat_3"), Cat(1, "cat_4"), Dog(1, "cat_1"),
+      Dog(1, "cat_2"), Dog(1, "cat_3"), Dog(1, "cat_4")
+    )
 
-    println(catQueue1)
+    assertEquals(queue.toList, expectedList)
   }
 
   test("Тест работы очереди с коллизиями в стратегии LIFO, явно указав") {
-    val queue: PriorityQueue[Animal] = UnlimitedPriorityQueue[Animal](CollisionStrategy.LIFO)
+    val queue = UnlimitedPriorityQueue[Animal](CollisionStrategy.LIFO)
       .enqueue(Cat(4, "cat_1"))
       .enqueue(Cat(4, "cat_2"))
       .enqueue(Cat(4, "cat_3"))
@@ -114,30 +95,32 @@ class UnlimitedPrioritySuite extends munit.FunSuite {
   }
 
   test("Тест работы очереди с коллизиями в стратегии FIFO") {
-    val catQueue: PriorityQueue[Animal] = UnlimitedPriorityQueue[Animal](CollisionStrategy.FIFO)
+    val queue = UnlimitedPriorityQueue[Animal](CollisionStrategy.FIFO)
       .enqueue(Cat(1, "cat_1"))
       .enqueue(Cat(2, "cat_2"))
       .enqueue(Cat(3, "cat_3"))
       .enqueue(Cat(4, "cat_4"))
       .enqueue(Cat(5, "cat_5"))
-      .enqueue(Cat(6, "cat_6"))
-      .enqueue(Cat(7, "cat_7"))
-      .enqueue(Cat(8, "cat_8"))
-      .enqueue(Cat(9, "cat_9"))
-      .enqueue(Cat(10, "cat_10"))
-
       .enqueue(Dog(1, "dog_1"))
       .enqueue(Dog(2, "dog_2"))
       .enqueue(Dog(3, "dog_3"))
       .enqueue(Dog(4, "dog_4"))
       .enqueue(Dog(5, "dog_5"))
-      .enqueue(Dog(6, "dog_6"))
-      .enqueue(Dog(7, "dog_7"))
-      .enqueue(Dog(8, "dog_8"))
-      .enqueue(Dog(9, "dog_9"))
-      .enqueue(Dog(10, "dog_10"))
 
-    println(catQueue)
+    val expected = List(
+      Dog(5, "dog_5"),
+      Cat(5, "cat_5"),
+      Dog(4, "dog_4"),
+      Cat(4, "cat_4"),
+      Dog(3, "dog_3"),
+      Cat(3, "cat_3"),
+      Dog(2, "dog_2"),
+      Cat(2, "cat_2"),
+      Dog(1, "dog_1"),
+      Cat(1, "cat_1")
+    )
+
+    assertEquals(queue.toList, expected)
   }
 
   test("Тест методов option") {

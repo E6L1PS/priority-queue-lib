@@ -6,7 +6,7 @@ import scala.annotation.tailrec
 /**
  * Реализация приоритетной очереди на основе кучи.
  *
- * Переопределен метод enqueue (если прeвышен лимит, проходится по последнему слою в дереве для поиска минимального по приоритету)
+ * Переопределен метод enqueue (если прeвышен лимит, проходится по нижнему уровню в дереве для поиска минимального по приоритету)
  *
  * Создан: 16.03.2024.
  *
@@ -25,11 +25,11 @@ final class LimitedPriorityQueue[+E] private
   import withTimeOrdering.*
 
   override def enqueue[B >: E](elem: B): PriorityQueue[B] = {
-    val tmp = counter + 1
+    val time = counter + 1
     val siftUpedHeap = if heap.size == limit
-    then heap.updateLowPriorityElem((elem, tmp).asInstanceOf[(E, Long)])
-    else heap.appended((elem, tmp)).asInstanceOf[Vector[(E, Long)]].siftUp
-    LimitedPriorityQueue(limit, strategy, siftUpedHeap, counter)
+    then heap.updateLowPriorityElem((elem, time).asInstanceOf[(E, Long)])
+    else heap.appended((elem, time)).asInstanceOf[Vector[(E, Long)]].siftUp
+    LimitedPriorityQueue(limit, strategy, siftUpedHeap, time)
   }
 
 }
@@ -68,7 +68,7 @@ object LimitedPriorityQueue {
         }
       }
 
-      val startIdx = Math.pow(2, (Math.log(heap.size) / Math.log(2)).toInt).toInt - 2
+      val startIdx = Math.pow(2, (Math.log(heap.size) / Math.log(2)).toInt - 1).toInt
       val lowPriorityElemIdx = findLowPriorityIdx(heap.size - 1, heap.size - 1, startIdx)
 
       if withTimeOrdering.gt(elem, heap(lowPriorityElemIdx))

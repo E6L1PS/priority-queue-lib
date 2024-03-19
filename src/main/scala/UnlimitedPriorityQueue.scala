@@ -42,11 +42,11 @@ class UnlimitedPriorityQueue[+E] protected
   }
 
   override def enqueue[B >: E](elem: B): PriorityQueue[B] =
-    val tmp = counter + 1
+    val time = counter + 1
     UnlimitedPriorityQueue(
       strategy,
-      heap.appended((elem, tmp)).asInstanceOf[Vector[(E, Long)]].siftUp,
-      tmp)
+      heap.appended((elem, time)).asInstanceOf[Vector[(E, Long)]].siftUp,
+      time)
 
   override def dequeue: (E, PriorityQueue[E]) =
     dequeueOption.getOrElse(throw new NoSuchElementException("Queue is empty"))
