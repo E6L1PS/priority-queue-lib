@@ -6,7 +6,9 @@ import scala.annotation.tailrec
 /**
  * Реализация приоритетной очереди на основе кучи.
  *
- * Переопределен метод enqueue (если прeвышен лимит, проходится по нижнему уровню в дереве для поиска минимального по приоритету)
+ * Переопределен метод enqueue (если прeвышен лимит, проходится по терминальным узлам дерева (в среднем n/2 узлов) для поиска минимального по приоритету)
+ *
+ * Сложность enqueue: O(log n), в худшем случае (при лимите) O(n)
  *
  * Создан: 16.03.2024.
  *
@@ -37,7 +39,10 @@ final class LimitedPriorityQueue[+E] private
 
 object LimitedPriorityQueue {
 
-  def apply[E](limit: Long, strategy: CollisionStrategy = CollisionStrategy.LIFO)(implicit ordering: Ordering[E]): LimitedPriorityQueue[E] = {
+  def apply[E](
+                limit: Long,
+                strategy: CollisionStrategy = CollisionStrategy.LIFO
+              )(implicit ordering: Ordering[E]): LimitedPriorityQueue[E] = {
     new LimitedPriorityQueue(limit, strategy, Vector.empty, Long.MinValue)
   }
 
@@ -68,8 +73,7 @@ object LimitedPriorityQueue {
         }
       }
 
-      val startIdx = Math.pow(2, (Math.log(heap.size) / Math.log(2)).toInt - 1).toInt
-      val lowPriorityElemIdx = findLowPriorityIdx(heap.size - 1, heap.size - 1, startIdx)
+      val lowPriorityElemIdx = findLowPriorityIdx(heap.size - 1, heap.size - 1, heap.size / 2)
 
       if withTimeOrdering.gt(elem, heap(lowPriorityElemIdx))
       then heap.updated(lowPriorityElemIdx, elem).siftUp(lowPriorityElemIdx)

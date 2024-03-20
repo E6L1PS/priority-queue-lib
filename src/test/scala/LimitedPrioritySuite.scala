@@ -36,7 +36,7 @@ class LimitedPrioritySuite extends munit.FunSuite {
     assertEquals(catQueue.size, 5)
   }
 
-  test("Тесты лимита 3") {
+  test("Тесты лимита 2") {
     val limit = 6
     val queue = LimitedPriorityQueue[Int](limit)
       .enqueue(11)
@@ -58,7 +58,7 @@ class LimitedPrioritySuite extends munit.FunSuite {
     assertEquals(queue.toList, List(12, 11, 11, 10, 10, 6))
   }
 
-  test("Тесты лимита 2") {
+  test("Тесты лимита 3") {
     val limit = 5
     val queue = LimitedPriorityQueue[Int](limit)
       .enqueue(10)
@@ -73,6 +73,38 @@ class LimitedPrioritySuite extends munit.FunSuite {
     assertEquals(queue.toList, List(10, 6, 5, 5, 4))
   }
 
+  test("Тесты лимита 4") {
+    val limit = 15
+    val queue = LimitedPriorityQueue[Int](limit)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      .enqueue(1)
+      // после лимита
+      .enqueue(10)
+      .enqueue(10)
+      .enqueue(10)
+      .enqueue(10)
+      .enqueue(10)
+      .enqueue(10)
+      .enqueue(10)
+      .enqueue(10)
+
+    assertEquals(queue.size, limit)
+    assertEquals(queue.toList, List(10, 10, 10, 10, 10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1))
+  }
+  
   test("Тест преобразования очереди в список и массив") {
     val expectedList = List(
       Cat(11, "cat_3"),

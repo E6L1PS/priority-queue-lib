@@ -85,7 +85,9 @@ object UnlimitedPriorityQueue {
 
   import CollisionStrategy.*
 
-  def apply[E](collisionStrategy: CollisionStrategy = CollisionStrategy.LIFO)(implicit ordering: Ordering[E]): UnlimitedPriorityQueue[E] =
+  def apply[E](
+                collisionStrategy: CollisionStrategy = CollisionStrategy.LIFO
+              )(implicit ordering: Ordering[E]): UnlimitedPriorityQueue[E] =
     new UnlimitedPriorityQueue(collisionStrategy, Vector.empty, Long.MinValue)
 
   private def apply[E](
